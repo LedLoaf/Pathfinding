@@ -4,20 +4,34 @@
 
 struct Tile {
 public:
-	sf::Sprite sprite;
-	bool colored;
-	sf::Color color;
-	void setTexture(sf::Texture* tex) { sprite.setTexture(*tex);}
-	sf::Vector2f getPosition() { return sprite.getPosition(); }
+	sf::Sprite sprite;					// The tile's sprite
+	int H;								// Heuristic / movement cost to goal.
+	int G;								// Movement cost. (Total of entire path)
+	int F;								// Estimated cost for full path. (G + H)
+	Tile* parentNode = nullptr;					// Node to reach this node.
 
-	void move(sf::Vector2f pos) {
+	sf::Vector2f position;
+
+	bool isSolid;						// Tile is not able to be walked on
+	sf::Color color;					// Tile sprite color of the tile
+public:
+	void setTexture(sf::Texture* tex) { this->sprite.setTexture(*tex,false);}
+	void setTextureRect(const sf::IntRect rect) {this->sprite.setTextureRect(rect);}
+	
+	sf::Vector2f getPosition() { return this->sprite.getPosition(); }
+	void setPosition(const sf::Vector2f pos) {this->sprite.setPosition(pos);}
+	void setPosition(const float x, const float y){this->sprite.setPosition(x,y);}
+
+	void setColor(const sf::Color color){this->sprite.setColor(color);}
+	
+	void move(const sf::Vector2f pos) {
 		this->sprite.move(pos);
 	}
-	void move(float x, float y) {
+	void move(const float x, const float y) {
 		this->sprite.move(x,y);
 	}
 
-	void draw(sf::RenderTarget* target) {
-		target->draw(this->sprite);
+	void draw(sf::RenderTarget* target) const {
+		target->draw(this->sprite, sf::RenderStates::Default);
 	}
 };
